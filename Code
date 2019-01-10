@@ -1,0 +1,3 @@
+patterns = [1, 2, 3, 4, 5]
+patterninput = input ("Choose a Pattern Number")
+print("You have selected pattern" + patterninput)
