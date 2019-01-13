@@ -21,7 +21,7 @@ print("Choose a Pattern - ")
 for i in patterns:
     print("%d: %s" % (i, patterns[i]))
 
-desired_pattern = input("Choose a Pattern number - ")
+desired_pattern = int(input("Choose a Pattern number - "))
 
 ##Choose Trials
 
