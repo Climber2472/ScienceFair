@@ -1,5 +1,7 @@
 #Program for Science Fair
 
+import math
+
 ##Patterns
 patterns = {
     1: "Standard grid",
@@ -12,12 +14,30 @@ patterns = {
 NUM_TRIAL = 25
 ###plant spaceing - optimal is 30 inches convert to cm
 PLANT_SPACING = 30 / 0.39370
-print (PLANT_SPACING)
-def createLayout(pattern):
-    print("layout pattern %d" % (pattern))
-    return "hello"
+SQ_YARD_IN_ACRE = 4840
+YARDS_IN_ACRE = math.sqrt(SQ_YARD_IN_ACRE)
+FEET_IN_ACRE = 3.0*YARDS_IN_ACRE
+METERS_IN_ACRE = FEET_IN_ACRE*0.3048
+CM_IN_ACRE = METERS_IN_ACRE*100
 
-print("Choose a Pattern - ")
+###assuming a square we take the sqare root to get linear yards
+
+def createLayout(pattern):
+    plants = []
+    x = 0.0
+    y = 0.0
+    while y < CM_IN_ACRE:
+        while x < CM_IN_ACRE:
+            p = {'x': x, 'y': y, 'dead': False}
+            plants.append(p)
+            x = x + PLANT_SPACING
+        x = 0
+        y = y + PLANT_SPACING
+
+
+    return plants
+    
+    print("Choose a Pattern - ")
 for i in patterns:
     print("%d: %s" % (i, patterns[i]))
 
@@ -29,6 +49,7 @@ desired_pattern = int(input("Choose a Pattern number - "))
 ### lay out the plants
 
 master_layout = createLayout(desired_pattern)
+print("Number of plants placed: %d" % (len(master_layout)))
 
 ### loop NUM_TRIALS
 
@@ -44,4 +65,3 @@ for t in range(NUM_TRIAL):
 ### end loop
 ### calculate the fianl results individual trials
 ### print the results
-
