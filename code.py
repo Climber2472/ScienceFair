@@ -37,7 +37,7 @@ def createLayout(pattern):
 
     return plants
     
-    print("Choose a Pattern - ")
+print("Choose a Pattern - ")
 for i in patterns:
     print("%d: %s" % (i, patterns[i]))
 
