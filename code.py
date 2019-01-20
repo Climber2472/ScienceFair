@@ -37,17 +37,6 @@ MAX_OFFSET = math.sqrt(MAX_AREA_OF_IMPACT/math.pi)
 print(CENTER_OF_FIELD+MAX_OFFSET)
 print(CENTER_OF_FIELD-MAX_OFFSET)
 
-def placeRandomWeed():
-    ### Randomly pick the center of the weed circle
-    x = random.uniform(CENTER_OF_FIELD-MAX_OFFSET,CENTER_OF_FIELD+MAX_OFFSET)
-    y = random.uniform(CENTER_OF_FIELD-MAX_OFFSET,CENTER_OF_FIELD+MAX_OFFSET)
-    w = {"x": x, "y": y}
-    ### Now caluclate radius based on random death percent
-    d = random.uniform(DEATH_PERCENT_LOW, DEATH_PERCENT_HIGH)
-    area_effecteed = 0.01*d*TOTAL_AREA_OF_FIELD
-    radius = math.sqrt(area_effecteed/math.pi)
-    w["r"] = radius
-    return w
 
 def createLayout(pattern):
     plants = []
@@ -64,36 +53,60 @@ def createLayout(pattern):
 
     return plants
 
-## Start Main Program
-    placeRandomWeed()
+def placeRandomWeed():
+    ### Randomly pick the center of the weed circle
+    x = random.uniform(CENTER_OF_FIELD-MAX_OFFSET,CENTER_OF_FIELD+MAX_OFFSET)
+    y = random.uniform(CENTER_OF_FIELD-MAX_OFFSET,CENTER_OF_FIELD+MAX_OFFSET)
+    w = {"x": x, "y": y}
+    ### Now caluclate radius based on random death percent
+    d = random.uniform(DEATH_PERCENT_LOW, DEATH_PERCENT_HIGH)
+    area_effecteed = 0.01*d*TOTAL_AREA_OF_FIELD
+    radius = math.sqrt(area_effecteed/math.pi)
+    w["r"] = radius
+    return w
 
+### helper function to detmine if given plant is in sphere of weed influence
+def weedTouchPlant(weed, plant):
+    dist = math.sqrt((weed["x"] - plant["x"]) ** 2 + (weed["y"] - plant["y"]) ** 2)
+    return dist <= weed["r"]
+
+
+### given a layout and a weed, change dead flag to true on plants affected
+def killPlants(layout, weed):
+    for plant in layout:
+        if weedTouchPlant(weed, plant):
+            plant["dead"] = True
+            print(plant)
+    return layout
+
+
+## Start Main Program
+## Ask user for pattern to use
 print("Choose a Pattern - ")
 for i in patterns:
     print("%d: %s" % (i, patterns[i]))
-
 desired_pattern = int(input("Choose a Pattern number - "))
 
-##Choose Trials
-
-
 ### lay out the plants
-
 master_layout = createLayout(desired_pattern)
 print("Number of plants placed: %d" % (len(master_layout)))
 
 ### loop NUM_TRIALS
-
 for t in range(NUM_TRIAL):
     print("Starting trial %d..." % (t+1))
 
     ### make copy of layout
-    trail_run_layout = copy.deepcopy(master_layout)
+    layout = copy.deepcopy(master_layout)
 
+    ### randomly pick the disease weed and radius of impact
     weed = placeRandomWeed()
-    print("Weed - %s" % (str(weed)))
-    ### apply death rate
-    ### save trial results
+    print("Weed located at - %s" % (str(weed)))
 
+    ### apply death rate
+    final_layout = killPlants(layout, weed)
+
+
+    ### save trial results
     print("Trial %d complete" % (t+1))
 
 ### end loop
