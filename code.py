@@ -76,7 +76,6 @@ def killPlants(layout, weed):
     for plant in layout:
         if weedTouchPlant(weed, plant):
             plant["dead"] = True
-            print(plant)
     return layout
 
 
@@ -89,7 +88,9 @@ desired_pattern = int(input("Choose a Pattern number - "))
 
 ### lay out the plants
 master_layout = createLayout(desired_pattern)
-print("Number of plants placed: %d" % (len(master_layout)))
+number_of_plants = len(master_layout)
+print("Number of plants placed: %d" % (number_of_plants))
+
 
 ### loop NUM_TRIALS
 for t in range(NUM_TRIAL):
@@ -107,6 +108,10 @@ for t in range(NUM_TRIAL):
 
 
     ### save trial results
+    number_dead_plants = len(list(filter(lambda p: p["dead"], final_layout)))
+    print("Number of dead plants: %d" % (number_dead_plants))
+
+
     print("Trial %d complete" % (t+1))
 
 ### end loop
