@@ -60,6 +60,7 @@ def placeRandomWeed():
     w = {"x": x, "y": y}
     ### Now caluclate radius based on random death percent
     d = random.uniform(DEATH_PERCENT_LOW, DEATH_PERCENT_HIGH)
+    w["death_rate"] = d
     area_effecteed = 0.01*d*TOTAL_AREA_OF_FIELD
     radius = math.sqrt(area_effecteed/math.pi)
     w["r"] = radius
@@ -93,8 +94,11 @@ print("Number of plants placed: %d" % (number_of_plants))
 
 
 ### loop NUM_TRIALS
+results = []
 for t in range(NUM_TRIAL):
     print("Starting trial %d..." % (t+1))
+    result = {}
+    result ["number_of_plants"] = number_of_plants
 
     ### make copy of layout
     layout = copy.deepcopy(master_layout)
@@ -102,18 +106,23 @@ for t in range(NUM_TRIAL):
     ### randomly pick the disease weed and radius of impact
     weed = placeRandomWeed()
     print("Weed located at - %s" % (str(weed)))
+    result["weed"] = weed
 
     ### apply death rate
     final_layout = killPlants(layout, weed)
-
+    result["layout"] = final_layout
 
     ### save trial results
     number_dead_plants = len(list(filter(lambda p: p["dead"], final_layout)))
+    result["number_dead_plants"] = number_dead_plants
+    result["number_live_plants"] = number_of_plants - number_dead_plants
     print("Number of dead plants: %d" % (number_dead_plants))
 
-
+    ### Save this result in results
+    results.append(result)
     print("Trial %d complete" % (t+1))
 
 ### end loop
-### calculate the fianl results individual trials
+### calculate the final results individual trials
+### Average results of trials
 ### print the results
