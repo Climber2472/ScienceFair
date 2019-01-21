@@ -15,7 +15,8 @@ patterns = {
 ##Number of Trials Per pattern
 NUM_TRIAL = 25
 ###plant spaceing - optimal is 30 inches convert to cm
-PLANT_SPACING = 30 / 0.39370
+ROW_SPACING = 30 / 0.39370
+PLANT_SPACING = 4 / 0.39370
 SQ_YARD_IN_ACRE = 4840
 ###assuming a square we take the sqare root to get linear yards
 YARDS_IN_ACRE = math.sqrt(SQ_YARD_IN_ACRE)
@@ -29,7 +30,7 @@ CENTER_OF_FIELD = 0.5*CM_IN_ACRE
 DEATH_PERCENT_LOW = 1
 DEATH_PERCENT_HIGH = 15
 ###Percent percent of totalfield  area to determine area of circle
-###then calulate radius. Random placement of weed within box of worst case so no 
+###then calulate radius. Random placement of weed within box of worst case so no
 ###circle is clipped on the edge of the field
 
 MAX_AREA_OF_IMPACT = (DEATH_PERCENT_HIGH/100.0)*TOTAL_AREA_OF_FIELD
@@ -48,7 +49,7 @@ def createLayout(pattern):
             plants.append(p)
             x = x + PLANT_SPACING
         x = 0
-        y = y + PLANT_SPACING
+        y = y + ROW_SPACING
 
 
     return plants
