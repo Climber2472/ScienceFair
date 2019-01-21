@@ -14,7 +14,8 @@ patterns = {
 }
 ##Number of Trials Per pattern
 NUM_TRIAL = 25
-###plant spaceing - optimal is 30 inches convert to cm
+### row spacing - optimal is 30 inches convert to cm
+### plant spacing - optimal is 4 inches convert to cm
 ROW_SPACING = 30 / 0.39370
 PLANT_SPACING = 4 / 0.39370
 SQ_YARD_IN_ACRE = 4840
@@ -27,7 +28,7 @@ TOTAL_AREA_OF_FIELD = CM_IN_ACRE * CM_IN_ACRE
 CENTER_OF_FIELD = 0.5*CM_IN_ACRE
 
 
-DEATH_PERCENT_LOW = 1
+DEATH_PERCENT_LOW = 0
 DEATH_PERCENT_HIGH = 15
 ###Percent percent of totalfield  area to determine area of circle
 ###then calulate radius. Random placement of weed within box of worst case so no
@@ -35,8 +36,11 @@ DEATH_PERCENT_HIGH = 15
 
 MAX_AREA_OF_IMPACT = (DEATH_PERCENT_HIGH/100.0)*TOTAL_AREA_OF_FIELD
 MAX_OFFSET = math.sqrt(MAX_AREA_OF_IMPACT/math.pi)
-print(CENTER_OF_FIELD+MAX_OFFSET)
-print(CENTER_OF_FIELD-MAX_OFFSET)
+
+### corn calories
+CALORIES_PER_ACRE = 15000000 ### from https://www.scientificamerican.com/article/time-to-rethink-corn/
+
+CALORIES_PER_PLANT = CALORIES_PER_ACRE / 52668 ### from standard layout TODO calculate this
 
 
 def createLayout(pattern):
@@ -100,6 +104,7 @@ for t in range(NUM_TRIAL):
     print("Starting trial %d..." % (t+1))
     result = {}
     result ["number_of_plants"] = number_of_plants
+    result ["possible_calories"] = CALORIES_PER_PLANT*number_of_plants
 
     ### make copy of layout
     layout = copy.deepcopy(master_layout)
@@ -117,13 +122,22 @@ for t in range(NUM_TRIAL):
     number_dead_plants = len(list(filter(lambda p: p["dead"], final_layout)))
     result["number_dead_plants"] = number_dead_plants
     result["number_live_plants"] = number_of_plants - number_dead_plants
+    result["actual_calories"] = CALORIES_PER_PLANT*result["number_live_plants"]
+    result["yield"] = result["actual_calories"]/result["possible_calories"]*100.0 ### Convert to percent
     print("Number of dead plants: %d" % (number_dead_plants))
+    print("Calories per Acre: %d" % (result["actual_calories"]))
+    print("Yield: %f" % (result["yield"]))
 
     ### Save this result in results
     results.append(result)
     print("Trial %d complete" % (t+1))
 
 ### end loop
-### calculate the final results individual trials
+
 ### Average results of trials
+sum = 0
+for result in results:
+    sum += result["actual_calories"]
+average = sum / NUM_TRIAL
+print("Average is %d" % (average))
 ### print the results
