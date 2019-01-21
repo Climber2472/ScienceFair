@@ -141,3 +141,13 @@ for result in results:
 average = sum / NUM_TRIAL
 print("Average is %d" % (average))
 ### print the results
+print("\n\n\n Results Follow - Put in Excel... \n\n\n")
+i = 1
+print("trial_no, number_live_plants, number_dead_plants, number_of_plants, calories, yield")
+for result in results:
+    print("%d, %d, %d, %d, %d, %f" % (i, result["number_live_plants"],
+                                         result["number_dead_plants"],
+                                         result["number_of_plants"],
+                                         result["actual_calories"],
+                                         result["yield"]))
+    i += 1
