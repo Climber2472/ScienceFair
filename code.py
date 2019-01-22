@@ -27,6 +27,12 @@ CM_IN_ACRE = METERS_IN_ACRE*100
 TOTAL_AREA_OF_FIELD = CM_IN_ACRE * CM_IN_ACRE
 CENTER_OF_FIELD = 0.5*CM_IN_ACRE
 
+### pattern 3 - parabolas
+PY_Y_INTERCEPT = (CENTER_OF_FIELD**2/CM_IN_ACRE)
+print (PY_Y_INTERCEPT)
+
+### pattern 4 - stagger
+P4_Y_ROW_SPACING = math.sqrt(ROW_SPACING**2 - (PLANT_SPACING/2)**2)
 
 DEATH_PERCENT_LOW = 0
 DEATH_PERCENT_HIGH = 15
@@ -43,7 +49,27 @@ CALORIES_PER_ACRE = 15000000 ### from https://www.scientificamerican.com/article
 CALORIES_PER_PLANT = CALORIES_PER_ACRE / 52668 ### from standard layout TODO calculate this
 
 
-def createLayout(pattern):
+def createLayout1():
+    plants = []
+    x = 0.0
+    y = 0.0
+    while y < CM_IN_ACRE:
+        single_row = []
+        while x < CM_IN_ACRE:
+            p = {'x': x, 'y': y, 'dead': False}
+            plants.append(p)
+            x = x + PLANT_SPACING
+        x = 0
+        y = y + ROW_SPACING
+
+
+    return plants
+
+def createLayout2():
+
+    return plants
+
+def createLayout3():
     plants = []
     x = 0.0
     y = 0.0
@@ -55,8 +81,50 @@ def createLayout(pattern):
         x = 0
         y = y + ROW_SPACING
 
+    return plants
+
+### stagger grid
+def createLayout4():
+    plants = []
+    x = 0.0
+    y = 0.0
+    staggered = False
+    while y < CM_IN_ACRE:
+        single_row = []
+        while x < CM_IN_ACRE:
+            p = {'x': x, 'y': y, 'dead': False}
+            plants.append(p)
+            x = x + PLANT_SPACING
+        if staggered:
+            x = 0.0
+            staggered = False
+        else:
+            x = PLANT_SPACING/2.0
+            staggered = True
+        y = y + P4_Y_ROW_SPACING
+
 
     return plants
+
+def createLayout5():
+
+    return plants
+
+def createLayout(pattern):
+    switcher = {
+        1: createLayout1,
+        2: createLayout2,
+        3: createLayout3,
+        4: createLayout4,
+        5: createLayout5,
+    }
+    f = switcher.get(pattern)
+    if f == None:
+        raise(ValueError("Invalid Layout Specified. Please Pick 1-5"))
+        return None
+
+        ### Call the specified function
+    return f()
 
 def placeRandomWeed():
     ### Randomly pick the center of the weed circle
