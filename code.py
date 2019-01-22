@@ -93,7 +93,7 @@ def createLayout4():
         single_row = []
         while x < CM_IN_ACRE:
             p = {'x': x, 'y': y, 'dead': False}
-            plants.append(p)
+            single_row.append(p)
             x = x + PLANT_SPACING
         if staggered:
             x = 0.0
@@ -102,7 +102,8 @@ def createLayout4():
             x = PLANT_SPACING/2.0
             staggered = True
         y = y + P4_Y_ROW_SPACING
-
+        plants.extend(single_row)
+        
 
     return plants
 
