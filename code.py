@@ -27,6 +27,10 @@ CM_IN_ACRE = METERS_IN_ACRE*100
 TOTAL_AREA_OF_FIELD = CM_IN_ACRE * CM_IN_ACRE
 CENTER_OF_FIELD = 0.5*CM_IN_ACRE
 
+### pattern 2 constants
+
+TWO_PI_RADIANS = 2.0*math.pi
+
 ### pattern 3 - parabolas
 PY_Y_INTERCEPT = (CENTER_OF_FIELD**2/CM_IN_ACRE)
 print (PY_Y_INTERCEPT)
@@ -54,7 +58,6 @@ def createLayout1():
     x = 0.0
     y = 0.0
     while y < CM_IN_ACRE:
-        single_row = []
         while x < CM_IN_ACRE:
             p = {'x': x, 'y': y, 'dead': False}
             plants.append(p)
@@ -66,6 +69,32 @@ def createLayout1():
     return plants
 
 def createLayout2():
+    plants = []
+    ### place first plant in center of field
+    cx = 0.5*CM_IN_ACRE
+    cy = 0.5*CM_IN_ACRE
+    p = {'x': cx, 'y': cy, 'dead': False}
+    plants.append(p)
+
+    theta = 0.0 ### angle in radians as we move around the circle
+    ring_number = 1 ### first ring
+
+    plant_placed = True ### to force start of loop
+    while plant_placed:
+        plant_placed = False ### start loop not having any plants placed
+        theta_increment = PLANT_SPACING / (ring_number * ROW_SPACING)
+        while theta < TWO_PI_RADIANS: 
+            x = ring_number * ROW_SPACING * math.cos(theta)
+            y = ring_number * ROW_SPACING * math.sin(theta)
+            theta = theta + theta_increment
+            if theta < TWO_PI_RADIANS: ### if next placement doesn't overlap the ring, place
+                p = {'x': cx + x, 'y': cy + y, 'dead': False}
+                if p['x'] >= 0.0 and p['y'] >= 0 and p['x'] <= CM_IN_ACRE and p['y'] <= CM_IN_ACRE: ### check field boundaries
+                    plants.append(p)
+                    plant_placed = True
+            
+        theta = 0.0
+        ring_number = ring_number + 1
 
     return plants
 
@@ -122,9 +151,8 @@ def createLayout(pattern):
     f = switcher.get(pattern)
     if f == None:
         raise(ValueError("Invalid Layout Specified. Please Pick 1-5"))
-        return None
 
-        ### Call the specified function
+     ### Call the specified function
     return f()
 
 def placeRandomWeed():
@@ -220,4 +248,4 @@ for result in results:
                                          result["weed"]["death_rate"],
                                          result["actual_calories"],
                                          result["yield"]))
-    i += 1
+    i = i + 1
