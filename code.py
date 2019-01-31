@@ -100,16 +100,6 @@ def createLayout2():
 
 def createLayout3():
     plants = []
-    x = 0.0
-    y = 0.0
-    while y < CM_IN_ACRE:
-        while x < CM_IN_ACRE:
-            p = {'x': x, 'y': y, 'dead': False}
-            plants.append(p)
-            x = x + PLANT_SPACING
-        x = 0
-        y = y + ROW_SPACING
-
     return plants
 
 ### stagger grid
@@ -137,7 +127,7 @@ def createLayout4():
     return plants
 
 def createLayout5():
-
+    plants = []
     return plants
 
 def createLayout(pattern):
