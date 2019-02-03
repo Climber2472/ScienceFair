@@ -128,6 +128,31 @@ def createLayout4():
 
 def createLayout5():
     plants = []
+
+    a = ROW_SPACING/math.sqrt(3)
+    cx = 0.0
+    cy = 0.0
+    staggered = False
+    while cy <= (CM_IN_ACRE + 0.5 * ROW_SPACING):
+        while cx <= (CM_IN_ACRE + a):
+            ### lay plants on 3 sides
+            p = {'x': cx, 'y': cy, 'dead': False} ### center for test purposes
+            plants.append(p)
+
+            cx = cx + 2.0 * a
+
+        if staggered:
+            cx = 0.0 
+            staggered = False
+        else: 
+            cx = 1.5 * a
+            staggered = True
+        cy = cy + 0.5 * ROW_SPACING
+        
+
+
+
+
     return plants
 
 def createLayout(pattern):
