@@ -52,6 +52,17 @@ CALORIES_PER_ACRE = 15000000 ### from https://www.scientificamerican.com/article
 
 CALORIES_PER_PLANT = CALORIES_PER_ACRE / 52668 ### from standard layout TODO calculate this
 
+def plant_in_field(p):
+    if p ['x'] < 0.0:
+        return False
+    elif p ['y'] < 0.0:
+        return False
+    elif p ['x'] > CM_IN_ACRE:
+        return False
+    elif p ['y'] > CM_IN_ACRE:
+        return False
+    else:
+        return True
 
 def createLayout1():
     plants = []
@@ -83,16 +94,16 @@ def createLayout2():
     while plant_placed:
         plant_placed = False ### start loop not having any plants placed
         theta_increment = PLANT_SPACING / (ring_number * ROW_SPACING)
-        while theta < TWO_PI_RADIANS: 
+        while theta < TWO_PI_RADIANS:
             x = ring_number * ROW_SPACING * math.cos(theta)
             y = ring_number * ROW_SPACING * math.sin(theta)
             theta = theta + theta_increment
             if theta < TWO_PI_RADIANS: ### if next placement doesn't overlap the ring, place
                 p = {'x': cx + x, 'y': cy + y, 'dead': False}
-                if p['x'] >= 0.0 and p['y'] >= 0 and p['x'] <= CM_IN_ACRE and p['y'] <= CM_IN_ACRE: ### check field boundaries
+                if plant_in_field(p):
                     plants.append(p)
                     plant_placed = True
-            
+
         theta = 0.0
         ring_number = ring_number + 1
 
@@ -122,33 +133,63 @@ def createLayout4():
             staggered = True
         y = y + P4_Y_ROW_SPACING
         plants.extend(single_row)
-        
+
 
     return plants
+
+### theta1 x must be less that theta2 x for this work
+def placeHexRow (cx, cy, apothem, theta1, theta2):
+    ### place row of plants as long as on field
+    plants = []
+    x1 = round(cx + apothem * math.cos(theta1), 10)
+    y1 = round(cy + -1.0 * apothem * math.sin(theta1), 10) ### flip y so in proper direction
+    x2 = round(cx + apothem * math.cos(theta2), 10)
+    y2 = round(cy + -1.0 * apothem * math.sin(theta2), 10) ### talk about rounding error in expplaination
+    theta = math.asin((y2-y1) / apothem) ### angle of the row relative to center point
+    x = x1
+    y = y1
+    p = {'x': x, 'y': y, 'dead': False}
+    if plant_in_field(p):
+        plants.append(p)
+    delta_x = PLANT_SPACING * math.cos(theta)
+    delta_y = PLANT_SPACING * math.sin(theta)
+    while x < x2 - delta_x:
+        x = x + delta_x
+        y = y + delta_y
+        p = {'x': x, 'y': y, 'dead': False}
+        if plant_in_field(p):
+            plants.append(p)
+
+
+
+    return plants
+
+
 
 def createLayout5():
     plants = []
 
-    a = ROW_SPACING/math.sqrt(3)
+    apothem = ROW_SPACING/math.sqrt(3)
     cx = 0.0
     cy = 0.0
     staggered = False
     while cy <= (CM_IN_ACRE + 0.5 * ROW_SPACING):
-        while cx <= (CM_IN_ACRE + a):
+        while cx <= (CM_IN_ACRE + apothem):
             ### lay plants on 3 sides
-            p = {'x': cx, 'y': cy, 'dead': False} ### center for test purposes
-            plants.append(p)
+            plants.extend(placeHexRow(cx, cy, apothem, math.pi*2.0/3.0, math.pi/3.0))
+            plants.extend(placeHexRow(cx, cy, apothem, math.pi, math.pi*4.0/3.0))
+            plants.extend(placeHexRow(cx, cy, apothem, math.pi*5.0/3.0, 0.0))
 
-            cx = cx + 2.0 * a
+            cx = cx + 2.0 * apothem
 
         if staggered:
-            cx = 0.0 
+            cx = 0.0
             staggered = False
-        else: 
-            cx = 1.5 * a
+        else:
+            cx = 1.5 * apothem
             staggered = True
         cy = cy + 0.5 * ROW_SPACING
-        
+
 
 
 
@@ -228,7 +269,7 @@ for t in range(NUM_TRIAL):
 
     ### apply death rate
     final_layout = killPlants(layout, weed)
-    result["layout"] = final_layout
+    ### result["layout"] = final_layout
 
     ### save trial results
     number_dead_plants = len(list(filter(lambda p: p["dead"], final_layout)))
