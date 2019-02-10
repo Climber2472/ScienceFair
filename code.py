@@ -195,8 +195,8 @@ def createLayout(pattern):
     switcher = {
         1: createLayout1,
         2: createLayout2,
-        3: createLayout4,
-        4: createLayout5,
+        3: createLayout3,
+        4: createLayout4,
     }
     f = switcher.get(pattern)
     if f == None:
