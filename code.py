@@ -8,9 +8,8 @@ import random
 patterns = {
     1: "Standard grid",
     2: "Concentric circles",
-    3: "Parabolas",
-    4: "Stagger grid",
-    5: "Hexegonal"
+    3: "Stagger grid",
+    4: "Hexegonal"
 }
 ##Number of Trials Per pattern
 NUM_TRIAL = 25
@@ -109,12 +108,8 @@ def createLayout2():
 
     return plants
 
-def createLayout3():
-    plants = []
-    return plants
-
 ### stagger grid
-def createLayout4():
+def createLayout3():
     plants = []
     x = 0.0
     y = 0.0
@@ -166,7 +161,7 @@ def placeHexRow (cx, cy, apothem, theta1, theta2):
 
 
 
-def createLayout5():
+def createLayout4():
     plants = []
 
     apothem = ROW_SPACING/math.sqrt(3)
@@ -200,9 +195,8 @@ def createLayout(pattern):
     switcher = {
         1: createLayout1,
         2: createLayout2,
-        3: createLayout3,
-        4: createLayout4,
-        5: createLayout5,
+        3: createLayout4,
+        4: createLayout5,
     }
     f = switcher.get(pattern)
     if f == None:
