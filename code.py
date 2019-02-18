@@ -3,12 +3,13 @@
 import copy
 import math
 import random
+import matplotlib.pyplot as plt
 
 ##Patterns
 patterns = {
-    1: "Standard grid",
-    2: "Concentric circles",
-    3: "Stagger grid",
+    1: "Standard Grid",
+    2: "Concentric Circles",
+    3: "Stagger Grid",
     4: "Hexegonal"
 }
 ##Number of Trials Per pattern
@@ -281,12 +282,6 @@ for t in range(NUM_TRIAL):
 
 ### end loop
 
-### Average results of trials
-sum = 0
-for result in results:
-    sum += result["actual_calories"]
-average = sum / NUM_TRIAL
-print("Average is %d" % (average))
 ### print the results
 print("\n\n\n Results Follow - Put in Excel... \n\n\n")
 i = 1
@@ -299,3 +294,32 @@ for result in results:
                                          result["actual_calories"],
                                          result["yield"]))
     i = i + 1
+
+### Average results of trials
+sum = 0
+for result in results:
+    sum += result["actual_calories"]
+average = sum / NUM_TRIAL
+print("Average Calories Per Acre is %d" % (average))
+
+### plot graph1
+graph_name= patterns[desired_pattern]
+plt.title('Results')
+plt.xlabel('Trial Number')
+plt.ylabel('Calories (per acre)')
+
+xdata=[]
+ydata=[]
+i = 1
+for result in results:
+    xdata.append(str(i)) ### append trial num as x as string
+    ydata.append(result["actual_calories"])
+    i = i+1
+
+plt.bar(xdata, ydata, label=graph_name)
+
+
+
+plt.legend()
+### plt.show()
+plt.savefig(graph_name + '.png')
